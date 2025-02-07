@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+# Enterprise Contract Analysis System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### Contract Analyzer is an AI-powered contract analysis system that processes PDF contracts to extract key information, identify risks, and assess compliance.
 
-## Available Scripts
+### Business Context
 
-In the project directory, you can run:
+Enterprise businesses manage thousands of vendor contracts, each with specific compliance requirements, renewal dates, and business obligations. Reviewing those documents manually, is time-consuming and error-prone, leading to missed renewals and compliance risks.
 
-### `npm start`
+### Features
+- PDF contract upload and processing
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- AI-powered contract analysis using Google Vertex AI
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Risk assessment and compliance checking
 
-### `npm test`
+- Interactive timeline visualization
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Real-time processing status updates
 
-### `npm run build`
+### Requirements
+1. **Document Processing Pipeline**
+   - Implement a system to process PDF contracts.
+   - Extract key contract metadata: parties involved, effective dates, renewal terms, compliance requirements.
+   - Store processed information in a structured format.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **Intelligent Analysis Engine**
+   - Design an agent-based system using LangGraph for orchestrating multiple specialized agents.
+   - Implement agents for different aspects: compliance checking, risk assessment, renewal tracking.
+   - Use function calling to integrate with external tools/APIs (functions may return mock data; don't use real external APIs).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. **Business Intelligence Layer**
+   - Generate automated contract summaries.
+   - Identify potential risks and compliance issues.
+   - Create renewal timeline visualizations.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Core Technology Stack
+   - Python 3.12
+   - LangGraph for agent orchestration
+   - OCI Free Tier (LLM inference) or Gemini 1.5 Pro
+   - FastAPI for REST API endpoints
+   - SQLite for data persistence
 
-### `npm run eject`
+### Setup Instructions
+1. Clone the Repository
+```
+git clone https://github.com/your-username/contract-analyzer.git
+cd contract-analyzer
+```
+2. Set Up a Virtual Environment
+Create and activate a virtual environment:
+```
+python -m venv venv
+source venv/bin/activate  # On macOS/Linux
+venv\Scripts\activate    # On Windows
+```
+3. Install Dependencies
+```
+pip install -r requirements.txt
+```
+4. Build the Frontend
+```
+npm run build
+```
+5. Run the Backend Server
+Go back to the project root and start the FastAPI backend:
+```
+python main.py
+```
+7. Open the Application
+Open your browser and navigate to:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+http://localhost:8000
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Running Tests
+To run tests using pytest with coverage:
+```
+source venv/bin/activate  # On macOS/Linux
+venv\Scripts\activate    # On Windows
+python -m pytest --cov=src ./tests
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
