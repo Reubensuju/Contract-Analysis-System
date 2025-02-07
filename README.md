@@ -43,8 +43,8 @@ Enterprise businesses manage thousands of vendor contracts, each with specific c
 ### Setup Instructions
 1. Clone the Repository
 ```
-git clone https://github.com/your-username/contract-analyzer.git
-cd contract-analyzer
+git clone https://github.com/Reubensuju/Contract-Analysis-System.git
+cd Contract-Analysis-System
 ```
 2. Set Up a Virtual Environment
 Create and activate a virtual environment:
@@ -57,11 +57,15 @@ venv\Scripts\activate    # On Windows
 ```
 pip install -r requirements.txt
 ```
-4. Build the Frontend
+4. Install Frontend Dependencies
+```
+npm install
+```
+5. Build the Frontend
 ```
 npm run build
 ```
-5. Run the Backend Server
+6. Run the Backend Server
 Go back to the project root and start the FastAPI backend:
 ```
 python main.py
