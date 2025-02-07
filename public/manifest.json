@@ -1,0 +1,19 @@
+{
+  "short_name": "Contract Analyzer",
+  "name": "Enterprise Contract Analysis System",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2196f3",
+  "background_color": "#ffffff",
+  "description": "An enterprise-level system for analyzing and managing contracts",
+  "categories": ["business", "productivity", "utilities"],
+  "orientation": "any",
+  "lang": "en-US"
+}
