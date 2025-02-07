@@ -32,14 +32,44 @@ const VisualizationPage = () => {
     // Convert dates to timestamps
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const renewalStart = new Date(renewalStartDate);
-    const renewalEnd = new Date(renewalEndDate);
     
     // Calculate dates 1 year before and after
     const beforeStart = new Date(start);
     beforeStart.setFullYear(start.getFullYear() - 1);
     const afterEnd = new Date(end);
     afterEnd.setFullYear(end.getFullYear() + 1);
+
+    // Create base timeline data
+    const timelineData = [
+      {
+        name: `Pre-contract Period`,
+        color: '#cccccc'
+      },
+      {
+        name: `Contract Term`,
+        label: `${start.getFullYear()}/${start.getMonth()+1}/${start.getDate()} - ${end.getFullYear()}/${end.getMonth()+1}/${end.getDate()}`,
+        color: '#ff9800'
+      }
+    ];
+
+    // Add renewal period only if valid dates are provided
+    if (renewalStartDate && renewalEndDate && 
+        !isNaN(new Date(renewalStartDate)) && !isNaN(new Date(renewalEndDate))) {
+      const renewalStart = new Date(renewalStartDate);
+      const renewalEnd = new Date(renewalEndDate);
+      
+      timelineData.push({
+        name: `Renewal Period`,
+        label: `${renewalStart.getFullYear()}/${renewalStart.getMonth()+1}/${renewalStart.getDate()} - ${renewalEnd.getFullYear()}/${renewalEnd.getMonth()+1}/${renewalEnd.getDate()}`,
+        color: '#4caf50'
+      });
+    }
+
+    // Add post-contract period
+    timelineData.push({
+      name: `Post-contract Period`,
+      color: '#cccccc'
+    });
 
     return {
       chart: {
@@ -56,26 +86,7 @@ const VisualizationPage = () => {
         text: 'Contract Timeline'
       },
       series: [{
-        data: [
-          {
-            name: `Pre-contract Period`,
-            color: '#cccccc'
-          },
-          {
-            name:  `Contract Term`,
-            label: `${start.getFullYear()}/${start.getMonth()+1}/${start.getDate()} - ${end.getFullYear()}/${end.getMonth()+1}/${end.getDate()}`,
-            color: '#2196f3'
-          },
-          {
-            name: `Renewal Period`,
-            label: `${renewalStart.getFullYear()}/${renewalStart.getMonth()+1}/${renewalStart.getDate()} - ${renewalEnd.getFullYear()}/${renewalEnd.getMonth()+1}/${renewalEnd.getDate()}`,
-            color: '#ff9800'
-          },
-          {
-            name: `Post-contract Period`,
-            color: '#cccccc'
-          }
-        ]
+        data: timelineData
       }]
     };
   };

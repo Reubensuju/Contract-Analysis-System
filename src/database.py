@@ -100,11 +100,23 @@ async def extract_file_text(doc_id: int) -> bool:
 
 async def get_document(doc_id: int):
     """Retrieve a document from the database"""
-    async with aiosqlite.connect(DATABASE_URL) as db:
-        cursor = await db.execute("""
-            SELECT * FROM documents WHERE id = ?
-        """, (doc_id,))
-        return await cursor.fetchone()
+    try:
+        async with aiosqlite.connect(DATABASE_URL) as db:
+            cursor = await db.execute("""
+                SELECT * FROM documents WHERE id = ?
+            """, (doc_id,))
+            result = await cursor.fetchone()
+            
+            # Return None if no document found
+            if result is None:
+                logger.info(f"No document found with id {doc_id}")
+                return None
+                
+            return result
+            
+    except Exception as e:
+        logger.error(f"Error retrieving document {doc_id}: {str(e)}", exc_info=True)
+        return None
 
 async def update_document_analysis(
     doc_id: int,

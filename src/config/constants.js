@@ -1,5 +1,5 @@
 // Logo/Icon configuration
-export const COMPANY_LOGO_PATH = '/logo.svg';
+export const COMPANY_LOGO_PATH = '../logo.svg';
 
 // Application settings
 export const APP_NAME = 'Enterprise Contract Analysis System';

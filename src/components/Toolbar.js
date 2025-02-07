@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { COMPANY_LOGO_PATH, APP_NAME } from '../config/constants';
+import { APP_NAME } from '../config/constants';
+import logo from '../assets/logo.svg';
 
 const Toolbar = () => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ const Toolbar = () => {
     <div className="toolbar">
       <div className="toolbar-content">
         <img 
-          src={COMPANY_LOGO_PATH}
+          src={logo}
           className="logo"
           onClick={() => navigate('/')}
           width="40" 

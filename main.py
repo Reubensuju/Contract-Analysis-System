@@ -1,49 +1,51 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request
+from fastapi.responses import JSONResponse, FileResponse
 from dotenv import load_dotenv
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from src.database import init_db, insert_document, get_document, extract_file_text
 from src.document_analyzer import analyze_document
 import uvicorn
 import json
+import os
 
 # Load environment variables
 load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="My FastAPI App",
-    description="A simple FastAPI application",
+    title="Contract Analysis Server",
+    description="AI-powered contract analysis system providing document processing, risk assessment, and compliance checking",
     version="1.0.0"
 )
 
+# CORS middleware configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # Update this with your frontend URL in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount the React build directory
+app.mount("/static", StaticFiles(directory="build/static"), name="static")
 
 @app.on_event("startup")
 async def startup_event():
     """Initialize the database on startup"""
     await init_db()
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+# @app.get("/")
+# async def root():
+#     return {"message": "Hello World"}
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
-@app.post("/upload-pdf")
+@app.post("/api/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
     if not file.content_type == "application/pdf":
-        return JSONResponse(
+        raise HTTPException(
             status_code=400,
-            content={"message": "Only PDF files are allowed"}
+            detail="Only PDF files are allowed"
         )
     
     try:
@@ -67,19 +69,19 @@ async def upload_pdf(file: UploadFile = File(...)):
             "content_type": file.content_type
         }
     except Exception as e:
-        return JSONResponse(
+        raise HTTPException(
             status_code=500,
-            content={"message": f"An error occurred: {str(e)}"}
+            detail=f"An error occurred: {str(e)}"
         )
 
-@app.get("/documents/{doc_id}")
+@app.get("/api/documents/{doc_id}")
 async def get_document_info(doc_id: int):
     try:
         doc = await get_document(doc_id)
         if doc is None:
-            return JSONResponse(
+            raise HTTPException(
                 status_code=404,
-                content={"message": "Document not found"}
+                detail="Document not found"
             )
         
         # Parse JSON strings back to lists
@@ -107,10 +109,43 @@ async def get_document_info(doc_id: int):
             "potential_risks": doc[16]  # Return directly as string
         }
     except Exception as e:
-        return JSONResponse(
+        raise HTTPException(
             status_code=500,
-            content={"message": f"An error occurred: {str(e)}"}
+            detail=f"An error occurred: {str(e)}"
         )
 
+# Custom Error Handlers
+@app.exception_handler(404)
+async def not_found_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=404,
+        content={"error": "Not Found", "message": exc.detail}
+    )
+
+@app.exception_handler(400)
+async def bad_request_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=400,
+        content={"error": "Bad Request", "message": exc.detail}
+    )
+
+@app.exception_handler(500)
+async def internal_server_error_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=500,
+        content={"error": "Internal Server Error", "message": "Something went wrong on our end."}
+    )
+
+# Serve index.html for all other routes to support React Router
+@app.get("/{full_path:path}")
+async def serve_react(full_path: str):
+    if full_path.startswith("api"):
+        raise HTTPException(status_code=404, detail="API endpoint not found")
+        
+    return FileResponse(
+        "build/index.html",
+        media_type="text/html"
+    )
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True) 
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
